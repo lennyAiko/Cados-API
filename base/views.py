@@ -6,3 +6,7 @@ from django.http import JsonResponse
 def endpoints(req):
     data = ['/advocates', 'advocates/:username']
     return JsonResponse(data, safe=False)
+
+def advocates_list(req):
+    data = ['Dennis', 'Lennox', 'Max', 'Tadas']
+    return JsonResponse(data, self=False)
