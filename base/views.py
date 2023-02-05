@@ -9,8 +9,8 @@ def endpoints(req):
 
 def advocate_list(req):
     data = ['Dennis', 'Lennox', 'Max', 'Tadas']
-    return JsonResponse(data, self=False)
+    return JsonResponse(data, safe=False)
 
 def advocate_detail(req, username):
     data = username
-    return JsonResponse(data, self=False)
+    return JsonResponse(data, safe=False)
