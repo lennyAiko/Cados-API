@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from .models import Advocate
+
 # Create your views here.
 
 # don't deploy with sqlite
@@ -13,8 +15,9 @@ def endpoints(req):
     return Response(data)
 
 def advocate_list(req):
-    data = ['Dennis', 'Lennox', 'Max', 'Tadas']
-    return JsonResponse(data, safe=False)
+    # data = ['Dennis', 'Lennox', 'Max', 'Tadas']
+    advocates = Advocate.objects.all()
+    return JsonResponse(advocates, safe=False)
 
 def advocate_detail(req, username):
     data = username
