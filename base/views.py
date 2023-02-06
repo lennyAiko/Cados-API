@@ -44,8 +44,25 @@ def advocate_list(req):
         return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def advocate_detail(req, username):
+
     advocate = Advocate.objects.get(username=username)
-    serializer = AdvocateSerializer(advocate, many=False)
-    return Response(serializer.data)
+
+    if req.method == 'GET':
+        serializer = AdvocateSerializer(advocate, many=False)
+        return Response(serializer.data)
+
+    if req.method == 'PUT':
+        advocate.username = req.data['username']
+        advocate.bio = req.data['bio']
+
+        advocate.save()
+
+        serializer = AdvocateSerializer(advocate, many=False)
+        return Response(serializer.data)
+
+    if req.method == 'DELETE':
+        advocate.delete()
+        return Response('user was deleted')
+
