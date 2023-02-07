@@ -6,8 +6,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Advocate
-from .serializers import AdvocateSerializer
+from .models import Advocate, Company
+from .serializers import AdvocateSerializer, CompanySerializer 
 
 # Create your views here.
 
@@ -100,3 +100,8 @@ class AdvocateDetail(APIView):
 #         advocate.delete()
 #         return Response('user was deleted')
 
+@api_view(['GET'])
+def companies_list(req):
+    companies = Company.objects.all()
+    serializer = CompanySerializer(companies, many=True)
+    return Response(serializer.data)
