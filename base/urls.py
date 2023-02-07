@@ -5,5 +5,6 @@ urlpatterns = [
     path('', views.endpoints),
     
     path('advocates/', views.advocate_list, name="advocates"),
-    path('advocates/<str:username>/', views.advocate_detail)
+    # path('advocates/<str:username>/', views.advocate_detail)
+    path('advocates/<str:username>/', views.AdvocateDetail.as_view())
 ]

@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.db.models import Q
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import Q
+from rest_framework.views import APIView
 
 from .models import Advocate
 from .serializers import AdvocateSerializer
@@ -43,17 +45,24 @@ def advocate_list(req):
 
         return Response(serializer.data)
 
+class AdvocateDetail(APIView):
+    """
+    View the details of each advocate
+    """
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def advocate_detail(req, username):
+    def get_object(self, username):
+        try:
+            return Advocate.objects.get(username=username)
+        except Advocate.DoesNotExist:
+            return Response('Advocate not found')
 
-    advocate = Advocate.objects.get(username=username)
-
-    if req.method == 'GET':
+    def get(self, req, username):
+        advocate = self.get_object(username)
         serializer = AdvocateSerializer(advocate, many=False)
         return Response(serializer.data)
-
-    if req.method == 'PUT':
+    
+    def put(self, req, username):
+        advocate = self.get_object(username)
         advocate.username = req.data['username']
         advocate.bio = req.data['bio']
 
@@ -61,8 +70,33 @@ def advocate_detail(req, username):
 
         serializer = AdvocateSerializer(advocate, many=False)
         return Response(serializer.data)
-
-    if req.method == 'DELETE':
+    
+    def delete(self, req, username):
+        advocate = self.get_object(username)
         advocate.delete()
         return Response('user was deleted')
+
+
+
+# @api_view(['GET', 'PUT', 'DELETE'])
+# def advocate_detail(req, username):
+
+#     advocate = Advocate.objects.get(username=username)
+
+#     if req.method == 'GET':
+#         serializer = AdvocateSerializer(advocate, many=False)
+#         return Response(serializer.data)
+
+#     if req.method == 'PUT':
+#         advocate.username = req.data['username']
+#         advocate.bio = req.data['bio']
+
+#         advocate.save()
+
+#         serializer = AdvocateSerializer(advocate, many=False)
+#         return Response(serializer.data)
+
+#     if req.method == 'DELETE':
+#         advocate.delete()
+#         return Response('user was deleted')
 
