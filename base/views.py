@@ -19,8 +19,9 @@ def endpoints(req):
     data = ['/advocates', 'advocates/:username']
     return Response(data)
 
+
+# @permission_classes([IsAuthenticated])
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
 def advocate_list(req):
     # Handles GET requests
     #/advocates/?query=#
@@ -46,6 +47,18 @@ def advocate_list(req):
         serializer = AdvocateSerializer(advocate, many=False)
 
         return Response(serializer.data)
+
+# @api_view(['GET'])
+# def advocate_detail(req, username):
+#     try:
+#         advocate = Advocate.objects.get(username=username)
+#     except Advocate.DoesNotExist:
+#         return Response('Advocate not found')
+
+#     print(username)
+#     serializer = AdvocateSerializer(advocate, many=False)
+#     return Response(serializer.data)
+
 
 class AdvocateDetail(APIView):
     """
