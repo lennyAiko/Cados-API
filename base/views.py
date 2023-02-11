@@ -64,7 +64,7 @@ def advocate_list(req):
 
         #contains prevents searching for an exact match
         advocates = Advocate.objects.filter(
-            Q(username__icontains=query) | Q(bio__icontains=query)
+            Q(username__icontains=query) | Q(bio__icontains=query) | Q(name__icontains=query)
             )
         serializer = AdvocateSerializer(advocates, many=True)
 
