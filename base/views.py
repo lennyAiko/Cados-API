@@ -69,7 +69,8 @@ def advocate_list(req):
         serializer = AdvocateSerializer(advocates, many=True)
 
         total_advocates = Advocate.objects.all().count()
-        return Response([serializer.data, total_advocates])
+        total_query_advocates = advocates.count()
+        return Response([serializer.data, total_advocates, total_query_advocates])
     
     if req.method == 'POST':
         advocate = Advocate.objects.create(
