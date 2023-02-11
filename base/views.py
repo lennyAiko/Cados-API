@@ -24,18 +24,15 @@ def get_an_advocate(req):
     company = COMPANIES[random.randint(0, len(COMPANIES))]
 
     url = 'https://cados.up.railway.app/advocates/'
-
     res = requests.get(url).json()
 
     available_advocates_count = Advocate.objects.all().count()
-
     data = res['advocates'][available_advocates_count]
 
     company_object = Company.objects.create(
         name = company,
         bio = 'Lorem Ipsum'
     )
-
     Advocate.objects.create(
         username = data['username'],
         name = data['name'],
@@ -44,7 +41,6 @@ def get_an_advocate(req):
         profile_pic = data['profile_pic'],
         company = company_object
     )
-
     company_object.save()
 
     return Response('A new advocate added!')
@@ -71,7 +67,9 @@ def advocate_list(req):
             Q(username__icontains=query) | Q(bio__icontains=query)
             )
         serializer = AdvocateSerializer(advocates, many=True)
-        return Response(serializer.data)
+
+        total_advocates = Advocate.objects.all().count()
+        return Response([serializer.data, total_advocates])
     
     if req.method == 'POST':
         advocate = Advocate.objects.create(
