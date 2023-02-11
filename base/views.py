@@ -29,7 +29,21 @@ def get_an_advocate(req):
 
     data = res['advocates'][available_advocates_count]
 
+    company_object = Company.objects.create(
+        name = company,
+        bio = 'Lorem Ipsum'
+    )
 
+    Advocate.objects.create(
+        username = data['username'],
+        name = data['name'],
+        bio = data['bio'],
+        twitter = data['twitter'],
+        profile_pic = data['profile_pic'],
+        company = company_object
+    )
+
+    company.save()
 
     return Response('A new advocate added!')
 
