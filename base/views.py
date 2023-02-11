@@ -16,10 +16,12 @@ from .serializers import AdvocateSerializer, CompanySerializer
 
 COMPANIES = ['stack overflow', 'mongodb', 'agora', 'github', 'meta', 'facebook', 'whatsapp', 'twitter', 'doodads']
 
-company = COMPANIES[random.randint(0, len(COMPANIES))]
+
 
 @api_view(['GET'])
 def get_an_advocate(req):
+
+    company = COMPANIES[random.randint(0, len(COMPANIES))]
 
     url = 'https://cados.up.railway.app/advocates/'
 
