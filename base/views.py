@@ -16,7 +16,7 @@ from .serializers import AdvocateSerializer, CompanySerializer
 
 COMPANIES = ['stack overflow', 'mongodb', 'agora', 'github', 'meta', 'facebook', 'whatsapp', 'twitter', 'doodads']
 
-company = random.randint(0, len(COMPANIES))
+company = COMPANIES[random.randint(0, len(COMPANIES))]
 
 @api_view(['GET'])
 def get_an_advocate(req):
@@ -43,7 +43,7 @@ def get_an_advocate(req):
         company = company_object
     )
 
-    company.save()
+    company_object.save()
 
     return Response('A new advocate added!')
 
