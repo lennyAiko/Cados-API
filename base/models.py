@@ -22,4 +22,4 @@ class Advocate(models.Model):
     twitter = models.URLField(null=True, blank=True)
 
     def __str__(self):
-        return self.username
+        return self.username or self.name

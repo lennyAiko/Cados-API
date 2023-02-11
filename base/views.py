@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.db.models import Q
+import requests
+import random
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -12,7 +14,24 @@ from .serializers import AdvocateSerializer, CompanySerializer
 
 # Create your views here.
 
-# don't deploy with sqlite
+COMPANIES = ['stack overflow', 'mongodb', 'agora', 'github', 'meta', 'facebook', 'whatsapp', 'twitter', 'doodads']
+
+company = random.randint(0, len(COMPANIES))
+
+@api_view(['GET'])
+def get_an_advocate(req):
+
+    url = 'https://cados.up.railway.app/advocates/'
+
+    res = requests.get(url).json()
+
+    available_advocates_count = Advocate.objects.all().count()
+
+    data = res['advocates'][available_advocates_count]
+
+
+
+    return Response('A new advocate added!')
 
 @api_view(['GET'])
 def endpoints(req):
