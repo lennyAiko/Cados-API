@@ -22,9 +22,7 @@ def fetcher(page):
     return res['advocates']
 
 def check_if_exist(user, advocates):
-    print(advocates[:], user['username'])
     if user['username'] in advocates: 
-        print('present!')
         return True
     return False
 
@@ -52,17 +50,14 @@ store = []
 @api_view(['GET'])
 def get_an_advocate(req):
     
-    count = len(value) + 1
+    count = len(value)
     page = len(pages) + 1
-
-    print(count, page)
-
     company = COMPANIES[random.randint(0, len(COMPANIES)-1)]
+
     data = fetcher(page)
 
     count += 1
     value.append(count)
-
     if count == 20:
         value.clear()
         print(count)
@@ -71,16 +66,12 @@ def get_an_advocate(req):
 
     data = data[count-1]
 
-    if len(store) > 1:
+    if len(store) > 0:
 
         check = check_if_exist(data, store)
-
-        print(check)
-
         if check is False:
             create_objects(company, data)
-            return Response('A new advocate added!')
-        
+            return Response('A new advocate added!') 
         if check is True: 
             count += 1
             return Response('Already exist!')
