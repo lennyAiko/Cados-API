@@ -16,22 +16,23 @@ from .serializers import AdvocateSerializer, CompanySerializer
 
 COMPANIES = ['stack overflow', 'mongodb', 'agora', 'github', 'meta', 'facebook', 'whatsapp', 'twitter', 'doodads']
 
-
-
-@api_view(['GET'])
-def get_an_advocate(req):
-
-    company = COMPANIES[random.randint(0, len(COMPANIES))]
-
-    url = 'https://cados.up.railway.app/advocates/'
+def fetcher(page):
+    url = f'https://cados.up.railway.app/advocates/?query=&page={page}'
     res = requests.get(url).json()
+    return res['advocates']
 
-    available_advocates_count = Advocate.objects.all().count()
-    data = res['advocates'][available_advocates_count]
+def check_if_exist(user, advocates):
+    print(advocates[:], user['username'])
+    if user['username'] in advocates: 
+        print('present!')
+        return True
+    return False
 
+def create_objects(company, data):
+    store.append(data['username'])
     company_object = Company.objects.create(
-        name = company,
-        bio = 'Lorem Ipsum'
+                name = company,
+                bio = 'Lorem Ipsum'
     )
     Advocate.objects.create(
         username = data['username'],
@@ -42,8 +43,50 @@ def get_an_advocate(req):
         company = company_object
     )
     company_object.save()
+    
 
-    return Response('A new advocate added!')
+value = []
+pages = []
+store = []
+
+@api_view(['GET'])
+def get_an_advocate(req):
+    
+    count = len(value) + 1
+    page = len(pages) + 1
+
+    print(count, page)
+
+    company = COMPANIES[random.randint(0, len(COMPANIES)-1)]
+    data = fetcher(page)
+
+    count += 1
+    value.append(count)
+
+    if count == 20:
+        value.clear()
+        print(count)
+        page += 1
+        pages.append(page)
+
+    data = data[count-1]
+
+    if len(store) > 1:
+
+        check = check_if_exist(data, store)
+
+        print(check)
+
+        if check is False:
+            create_objects(company, data)
+            return Response('A new advocate added!')
+        
+        if check is True: 
+            count += 1
+            return Response('Already exist!')
+    else:
+        create_objects(company, data)
+        return Response('A new advocate added here!')
 
 @api_view(['GET'])
 def endpoints(req):
